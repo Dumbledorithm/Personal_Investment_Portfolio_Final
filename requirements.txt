@@ -1,0 +1,8 @@
+streamlit
+pandas
+numpy
+plotly
+alpha-vantage
+requests
+mysql-connector-python
+bcrypt
