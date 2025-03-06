@@ -14,8 +14,7 @@ def get_db_connection():
             host=DB_HOST,
             user=DB_USER,
             password=DB_PASSWORD,
-            database=DB_NAME,
-            port=int(os.getenv("DB_PORT", 3306))
+            database=DB_NAME
         )
         return connection
     except Error as e:
