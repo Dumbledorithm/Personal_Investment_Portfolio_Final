@@ -1,14 +1,16 @@
 import streamlit as st
-
 # 🛑 Ensure this is the first Streamlit command!
 st.set_page_config(page_title="CapLens : Personal Investment Portfolio Management Tool", layout="wide")
-
 import homepage
 import portfoliomanagement
 import marketdata
 import investmentrecommendation
 import goalsetting
 import auth
+import time
+import random
+
+
 
 # Session state for authentication and navigation
 if 'authenticated' not in st.session_state:
@@ -20,51 +22,41 @@ if 'user_id' not in st.session_state:
 if 'current_page' not in st.session_state:
     st.session_state['current_page'] = "🏠 Home"
 
-# Custom CSS for blue buttons and navbar
+# Custom CSS for blue buttons
 st.markdown(
     """
     <style>
     .navbar {
         display: flex;
         justify-content: space-around;
+        align-items: center;
         background-color: #2C3E50;
-        padding: 10px;
+        padding: 15px;
         border-radius: 10px;
         margin-bottom: 20px;
     }
-    .navbar a {
-        color: white;
-        text-decoration: none;
-        font-size: 16px;
-        font-weight: bold;
-        padding: 10px 20px;
-        border-radius: 5px;
-        transition: background-color 0.3s, transform 0.3s;
+    .navbar-container {
         display: flex;
-        align-items: center;
-        gap: 8px;
+        width: 100%;
+        justify-content: space-between;
+        gap: 10px;
     }
-    .navbar a:hover {
-        background-color: #1ABC9C;
-        transform: translateY(-2px);
-    }
-    .navbar .active {
-        background-color: #1ABC9C;
-    }
-    .stButton button {
+    .navbar button, .stButton button {
+        flex: 1;
         background-color: #007BFF !important;
         color: white !important;
-        padding: 12px 20px;
-        margin: 8px 0;
+        padding: 12px;
         border: none;
         border-radius: 5px;
         cursor: pointer;
-        width: 100%;
         font-size: 16px;
         font-weight: bold;
         transition: background-color 0.3s ease;
+        text-align: center;
+        height: 50px;
+        width: 100%;
     }
-    .stButton button:hover {
+    .navbar button:hover, .stButton button:hover {
         background-color: #0056b3 !important;
     }
     </style>
@@ -112,16 +104,42 @@ def navbar():
         "🎯 Goal Setting": goalsetting.show,
     }
 
-    # Create a row of buttons for navigation
+    st.markdown("<div class='navbar-container'>", unsafe_allow_html=True)
     cols = st.columns(len(pages))
     for idx, (page_name, page_function) in enumerate(pages.items()):
-        if cols[idx].button(page_name):
-            st.session_state['current_page'] = page_name
-            st.rerun()
+        with cols[idx]:
+            if st.button(page_name, key=f"nav_{idx}"):
+                st.session_state['current_page'] = page_name
+                st.rerun()
+    st.markdown("</div>", unsafe_allow_html=True)
 
     # Render the selected page
-    if st.session_state['current_page'] in pages:
+    if st.session_state['current_page'] == "🏠 Home":
+        show_homepage_buttons()
+    elif st.session_state['current_page'] in pages:
         pages[st.session_state['current_page']]()
+
+# Homepage Buttons
+def show_homepage_buttons():
+    st.title("🏠 Welcome to Your Investment Portfolio")
+    st.write("Track and manage your investments efficiently.")
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("📊 Portfolio Management"):
+            st.session_state['current_page'] = "📊 Portfolio Management"
+            st.rerun()
+        if st.button("📈 Market Data"):
+            st.session_state['current_page'] = "📈 Market Data"
+            st.rerun()
+    
+    with col2:
+        if st.button("💡 Investment Recommendations"):
+            st.session_state['current_page'] = "💡 Investment Recommendations"
+            st.rerun()
+        if st.button("🎯 Goal Setting"):
+            st.session_state['current_page'] = "🎯 Goal Setting"
+            st.rerun()
 
 # Main App Logic
 if st.session_state['authenticated']:

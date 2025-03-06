@@ -156,18 +156,23 @@ import mysql.connector
 from mysql.connector import Error
 import numpy as np
 from alpha_vantage.timeseries import TimeSeries
+import os
+API_KEY = os.getenv("ALPHA_VANTAGE_API_KEY")
+DB_HOST = os.getenv("DB_HOST")
+DB_USER = os.getenv("DB_USER")
+DB_PASSWORD = os.getenv("DB_PASSWORD")
+DB_NAME = os.getenv("DB_NAME")
 
-# Alpha Vantage API Key
-API_KEY = "LILUV0N5VM0009JJ"  # Replace with your Alpha Vantage API key
+
 
 # Database connection
 def get_db_connection():
     try:
         connection = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="mysqlroot7",
-            database="InvestmentDB"
+            host=DB_HOST,
+            user=DB_USER,
+            password=DB_PASSWORD,
+            database=DB_NAME
         )
         return connection
     except Error as e:
